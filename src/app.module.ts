@@ -9,7 +9,6 @@ import { AuthModule } from './auth/auth.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { Role } from './permissions/entities/role.entity';
 import { Permission } from './permissions/entities/permission.entity';
-import { RoleHasPermissions } from './permissions/entities/role_has_permissions.entity';
 
 @Module({
 	imports: [
@@ -21,7 +20,7 @@ import { RoleHasPermissions } from './permissions/entities/role_has_permissions.
 			username: process.env.DATABASE_USER,
 			password: process.env.DATABASE_PASSWORD,
 			database: process.env.DATABASE_NAME,
-			entities: [User, Photo, Role, Permission, RoleHasPermissions],
+			entities: [User, Photo, Role, Permission],
 			synchronize: true,
 		}),
 		UsersModule,
