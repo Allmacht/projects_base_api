@@ -18,7 +18,10 @@ export class AuthService {
 	 * @param password The user's password
 	 * @returns A Promise that resolves to an object with the JWT token
 	 */
-	async signIn({ email, password }: SignInDto): Promise<{ access_token: string }> {
+	async signIn({
+		email,
+		password,
+	}: SignInDto): Promise<{ access_token: string; token_type: string; expires_in: number }> {
 		// Find the user in the database by their email
 		const user = await this.usersService.findOne(email);
 		// If the user is not found or is not active, throw an exception
@@ -36,6 +39,8 @@ export class AuthService {
 		// Generate a JWT token with the payload
 		return {
 			access_token: await this.jwtService.signAsync(payload),
+			token_type: 'Bearer',
+			expires_in: 3600,
 		};
 	}
 }

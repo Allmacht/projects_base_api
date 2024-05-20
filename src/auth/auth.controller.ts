@@ -22,7 +22,9 @@ export class AuthController {
 	@Public()
 	@Post('token')
 	@HttpCode(HttpStatus.OK)
-	async signIn(@Body() signInDto: SignInDto): Promise<{ access_token: string }> {
+	async signIn(
+		@Body() signInDto: SignInDto,
+	): Promise<{ access_token: string; token_type: string; expires_in: number }> {
 		return await this.authService.signIn(signInDto);
 	}
 

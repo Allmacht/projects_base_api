@@ -16,6 +16,9 @@ export class Photo {
 	url: string;
 
 	@Column({ nullable: false })
+	current: boolean;
+
+	@Column({ nullable: false })
 	userId: string;
 
 	@ManyToOne(() => User, {

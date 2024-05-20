@@ -32,4 +32,10 @@ export class RolesController {
 	): Promise<Role> {
 		return await this.rolesService.assignPermissionToRole(roleId, permission);
 	}
+
+	@Post('roles/assign_user/:uuid')
+	@HttpCode(HttpStatus.OK)
+	async assignRoleToUser() {
+		// TODO
+	}
 }
