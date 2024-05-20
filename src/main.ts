@@ -1,14 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import helmet from 'helmet';
+import helmet from '@fastify/helmet';
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 
 async function bootstrap(): Promise<void> {
-	const app = await NestFactory.create(AppModule);
+	const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ logger: true }));
 	app.useGlobalPipes(new ValidationPipe());
-	app.use(helmet());
 	app.enableCors();
 	app.setGlobalPrefix('api/');
+	await app.register(helmet);
 	await app.listen(3001);
 }
 bootstrap();
