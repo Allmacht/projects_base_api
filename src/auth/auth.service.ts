@@ -40,7 +40,7 @@ export class AuthService {
 		return {
 			access_token: await this.jwtService.signAsync(payload),
 			token_type: 'Bearer',
-			expires_in: 3600,
+			expires_in: 10800,
 		};
 	}
 }

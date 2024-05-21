@@ -4,13 +4,17 @@ import { Repository } from 'typeorm';
 import { Role } from './entities/role.entity';
 import { RoleDto } from './dtos/role.dto';
 import { AddPermissionToRoleDto } from './dtos/add_permission_to_role.dto';
+import { AddRoleToUserDto } from './dtos/add_role_to_user.dto';
 import { PermissionsService } from './permissions.service';
+import { UsersService } from '../users/users.service';
+import { User } from 'src/users/entities/User.entity';
 
 @Injectable()
 export class RolesService {
 	constructor(
 		@InjectRepository(Role) private roleRepository: Repository<Role>,
 		private readonly permissionsService: PermissionsService,
+		private readonly usersService: UsersService,
 	) {}
 
 	/**
@@ -89,5 +93,38 @@ export class RolesService {
 	 */
 	async findRoleByName(name: string): Promise<Role> {
 		return await this.roleRepository.findOneBy({ name: name });
+	}
+
+	/**
+	 * Assigns a role to a user in the database.
+	 * If the user or role does not exist, throws a ConflictException.
+	 *
+	 * @param {AddRoleToUserDto} dto - The DTO containing the user ID and role ID to be assigned.
+	 * @returns A Promise that resolves to the updated user entity.
+	 * @throws ConflictException if the user or role does not exist.
+	 */
+	async assignRoleToUser({ userId, roleId }: AddRoleToUserDto): Promise<User> {
+		// Find the user by ID with its associated roles
+		const user = await this.usersService.findOneWithRoles(userId);
+
+		// If the user does not exist, throw a ConflictException
+		if (!user) {
+			throw new ConflictException('User not found');
+		}
+
+		// Find the role by ID
+		const role = await this.findRoleById(roleId);
+		if (!role) {
+			throw new ConflictException('Role not found');
+		}
+
+		// Add the role to the user's roles array, ensuring there are no duplicates
+		const roles = [...new Set([...user.roles, role])];
+
+		// Update the user's roles array
+		user.roles = roles;
+
+		// Save the updated user entity to the database
+		return await this.usersService.update(userId, user);
 	}
 }

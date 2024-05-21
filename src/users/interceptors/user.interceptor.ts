@@ -19,6 +19,30 @@ export class TransformUserInterceptor implements NestInterceptor {
 					createdAt: data.createdAt,
 					updatedAt: data.updatedAt,
 				},
+				relationships: {
+					roles: {
+						data: data.roles.map((role) => ({
+							id: role.id,
+							type: 'Role',
+							attributes: {
+								name: role.name,
+								description: role.description,
+							},
+							relationships: {
+								permissions: {
+									data: role.permissions.map((permission) => ({
+										id: permission.id,
+										type: 'Permission',
+										attributes: {
+											name: permission.name,
+											description: permission.description,
+										},
+									})),
+								},
+							},
+						})),
+					},
+				},
 			})),
 		);
 	}

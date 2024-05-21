@@ -2,8 +2,10 @@ import { Body, Controller, HttpCode, HttpStatus, Post, Get, UseInterceptors, Par
 import { RolesService } from './roles.service';
 import { RoleDto } from './dtos/role.dto';
 import { TransformRoleInterceptor } from './interceptors/role.interceptor';
+import { TransformUserInterceptor } from 'src/users/interceptors/user.interceptor';
 import { Role } from './entities/role.entity';
 import { AddPermissionToRoleDto } from './dtos/add_permission_to_role.dto';
+import { AddRoleToUserDto } from './dtos/add_role_to_user.dto';
 
 @Controller('auth')
 export class RolesController {
@@ -34,8 +36,9 @@ export class RolesController {
 	}
 
 	@Post('roles/assign_user/:uuid')
+	@UseInterceptors(TransformUserInterceptor)
 	@HttpCode(HttpStatus.OK)
-	async assignRoleToUser() {
-		// TODO
+	async assignRoleToUser(@Body() role: AddRoleToUserDto): Promise<any> {
+		return await this.rolesService.assignRoleToUser(role);
 	}
 }

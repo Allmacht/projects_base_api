@@ -37,6 +37,6 @@ export class AuthController {
 	@HttpCode(HttpStatus.OK)
 	@Get('profile')
 	async profile(@Request() req): Promise<any> {
-		return await this.usersService.findOneById(req.user.id);
+		return await this.usersService.findOneWithRoles(req.user.id);
 	}
 }

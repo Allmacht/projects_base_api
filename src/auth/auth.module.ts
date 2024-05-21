@@ -12,7 +12,7 @@ import { AuthGuard } from './guards/auth.guard';
 @Module({
 	imports: [
 		UsersModule,
-		JwtModule.register({ global: true, secret: jwtConstants.secret, signOptions: { expiresIn: '3600s' } }),
+		JwtModule.register({ global: true, secret: jwtConstants.secret, signOptions: { expiresIn: '10800s' } }),
 	],
 	controllers: [AuthController],
 	providers: [AuthService, BcryptService, TransformUserInterceptor, { provide: APP_GUARD, useClass: AuthGuard }],

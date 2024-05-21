@@ -1,5 +1,15 @@
-import { Column, CreateDateColumn, UpdateDateColumn, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+	Column,
+	CreateDateColumn,
+	UpdateDateColumn,
+	Entity,
+	PrimaryGeneratedColumn,
+	OneToMany,
+	ManyToMany,
+	JoinTable,
+} from 'typeorm';
 import { Photo } from './Photo.entity';
+import { Role } from '../../permissions/entities/role.entity';
 import { Exclude } from 'class-transformer';
 import { Languages } from '../enums/languages.enum';
 import { AuthProviders } from '../enums/auth_providers.enum';
@@ -49,6 +59,20 @@ export class User {
 
 	@OneToMany(() => Photo, (photo) => photo.user)
 	photos: Photo[];
+
+	@ManyToMany(() => Role, (role) => role.users)
+	@JoinTable({
+		name: 'user_has_roles',
+		joinColumn: {
+			name: 'userId',
+			referencedColumnName: 'id',
+		},
+		inverseJoinColumn: {
+			name: 'roleId',
+			referencedColumnName: 'id',
+		},
+	})
+	roles: Role[];
 
 	@CreateDateColumn()
 	createdAt: Date;

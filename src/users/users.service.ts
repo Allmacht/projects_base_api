@@ -33,6 +33,18 @@ export class UsersService {
 	}
 
 	/**
+	 * Finds a user in the database by its id, including associated roles.
+	 * @param id The id of the user to be found.
+	 * @returns A Promise that resolves to the found user entity, including associated roles.
+	 */
+	async findOneWithRoles(id: string): Promise<User> {
+		return await this.userRepository.findOne({
+			where: { id },
+			relations: { roles: { permissions: true } },
+		});
+	}
+
+	/**
 	 * Registers a new user in the database.
 	 * @param registerInput The user data to be registered.
 	 * @returns The created user entity.
@@ -61,5 +73,22 @@ export class UsersService {
 			// Rethrow the error
 			throw error;
 		}
+	}
+
+	/**
+	 * Updates an existing user in the database.
+	 * @param id The id of the user to be updated.
+	 * @param user The partial user data to be merged with the existing user data.
+	 * @returns A Promise that resolves to the updated user entity.
+	 * @throws Error if the user with the provided id is not found.
+	 */
+	async update(id: string, user: Partial<User>): Promise<User> {
+		// Find the user by id
+		const existingUser = await this.userRepository.findOneBy({ id });
+		// If the user is not found, throw an error
+		if (!existingUser) {
+			throw new Error('User not found');
+		}
+		return await this.userRepository.save({ ...existingUser, ...user });
 	}
 }
