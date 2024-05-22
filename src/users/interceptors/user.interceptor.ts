@@ -8,7 +8,7 @@ export class TransformUserInterceptor implements NestInterceptor {
 		return next.handle().pipe(
 			map((data) => ({
 				id: data.id,
-				type: 'User',
+				type: 'users',
 				attributes: {
 					names: data.names,
 					lastName: data.lastName,
@@ -23,7 +23,7 @@ export class TransformUserInterceptor implements NestInterceptor {
 					roles: {
 						data: data.roles.map((role) => ({
 							id: role.id,
-							type: 'Role',
+							type: 'roles',
 							attributes: {
 								name: role.name,
 								description: role.description,
@@ -32,7 +32,7 @@ export class TransformUserInterceptor implements NestInterceptor {
 								permissions: {
 									data: role.permissions.map((permission) => ({
 										id: permission.id,
-										type: 'Permission',
+										type: 'permissions',
 										attributes: {
 											name: permission.name,
 											description: permission.description,
